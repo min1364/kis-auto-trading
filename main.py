@@ -1,4 +1,5 @@
 import os
+import time
 from dotenv import load_dotenv
 
 from kis_api import KisApi, save_trade_log
@@ -41,7 +42,7 @@ def find_holding(balance_data, stock_code):
 
 def decide_action(current_price, holding_qty, avg_price):
     """
-    
+    단순 자동매매 전략.
 
     1. 보유 수량이 없으면 매수
     2. 보유 중이고 수익률이 +1% 이상이면 매도
@@ -85,13 +86,19 @@ def main():
     kis.get_access_token()
     print("토큰 준비 완료")
 
+    time.sleep(1.5)
+
     print("\n[2] 현재가 조회")
     current_price = kis.get_current_price(stock_code)
     print(f"현재가: {current_price:,}원")
 
+    time.sleep(1.5)
+
     print("\n[3] 잔고 조회")
     balance = kis.get_balance()
     print("잔고 조회 성공")
+
+    time.sleep(1.5)
 
     holding = find_holding(balance, stock_code)
     holding_qty = holding["qty"]
@@ -150,12 +157,14 @@ def main():
 
         else:
             print("\n[6] 모의투자 시장가 매수 주문 실행")
+            time.sleep(1.5)
+
             result = kis.order_cash(
-                stock_code=stock_code,
-                qty=order_qty,
-                side="buy",
-                price=0,
-            )
+            stock_code=stock_code,
+            qty=order_qty,
+            side="buy",
+            price=0,
+)
 
             print("매수 주문 결과:")
             print(result)
@@ -209,6 +218,8 @@ def main():
 
         else:
             print("\n[6] 모의투자 시장가 매도 주문 실행")
+            time.sleep(1.5)
+            
             result = kis.order_cash(
                 stock_code=stock_code,
                 qty=sell_qty,
